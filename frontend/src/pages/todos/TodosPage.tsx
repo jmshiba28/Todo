@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store/store';
@@ -60,6 +60,14 @@ const TodosPage = () => {
     }
   };
 
+  const handlePrevMonth = () => {
+    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1));
+  };
+
   if (isLoading) {
     return <div className="text-white">Loading...</div>;
   }
@@ -75,6 +83,26 @@ const TodosPage = () => {
 
     return (
       <div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-gray-400">Monthly Task Progress</h3>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={handlePrevMonth}
+              className="p-2 rounded-lg hover:bg-gray-700 transition-colors text-white"
+            >
+              &lt; Prev
+            </button>
+            <div className="text-sm text-gray-400">
+              {format(currentDate, 'MMMM yyyy')}
+            </div>
+            <button
+              onClick={handleNextMonth}
+              className="p-2 rounded-lg hover:bg-gray-700 transition-colors text-white"
+            >
+              Next &gt;
+            </button>
+          </div>
+        </div>
         <div className="grid grid-cols-7 gap-1">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
             <div key={day} className="p-2 text-center text-gray-400 font-medium">
@@ -103,12 +131,6 @@ const TodosPage = () => {
           ))}
         </div>
         <div className="mt-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-gray-400">Monthly Task Progress</h3>
-            <div className="text-sm text-gray-400">
-              {format(currentDate, 'MMMM yyyy')}
-            </div>
-          </div>
           <div className="bg-gray-800 p-6 rounded-lg">
             <TodoChart data={todoStats} />
           </div>
@@ -130,7 +152,6 @@ const TodosPage = () => {
       </div>
     );
   };
-    
 
   return (
     <div className="min-h-screen bg-gray-900">
